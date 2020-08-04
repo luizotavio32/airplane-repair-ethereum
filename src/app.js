@@ -2,6 +2,7 @@ App = {
   loading: false,
   contracts: {},
 
+  ///////////////////////////////// METAMASK INTEGRATION /////////////////////////////////
   load: async () => {
     await App.loadWeb3()
     await App.loadAccount()
@@ -44,7 +45,8 @@ App = {
 
   loadAccount: async () => {
     // Set the current blockchain account
-    App.account = web3.eth.accounts[0]
+	App.account = web3.eth.accounts[0]
+	console.log(account)
   },
 
   loadContract: async () => {
@@ -70,56 +72,138 @@ App = {
     $('#account').html(App.account)
 
     // Render Tasks
-    await App.renderTasks()
+    await App.renderQuotations()
 
     // Update loading state
     App.setLoading(false)
   },
 
-  renderTasks: async () => {
-    // Load the total task count from the blockchain
-    const quotationCount = await App.quotationContract.taskCount()
-    const $quotationTemplate = $('.quotationTemplate')
+///////////////////////////////// END METAMASK INTEGRATION /////////////////////////////////
 
-    // Render out each task with a new task template
-    for (var i = 1; i <= quotationCount; i++) {
-      // Fetch the task data from the blockchain
-      const quotation = await App.quotationContract.quotations(i)
-      console.log('quotation***', quotation)
-      const quotationId = quotation[0].toNumber()
-      const content = JSON.parse(quotation[2])
-      content._airplane
-      // Create the html for the task
-      const $newQuotationTemplate = $quotationTemplate.clone()
-      $newQuotationTemplate.find('.content').html(content._airplane)
-      $newQuotationTemplate.find('input')
-                      .prop('name', quotationId)
-                      .prop('checked', true)
-                      .on('click', App.toggleCompleted)
 
-      // Put the task in the correct list
-      if (false) {
-        $('#completedTaskList').append($newTaskTemplate)
-      } else {
-        $('#taskList').append($newQuotationTemplate)
-      }
 
-      // Show the task
-      $newQuotationTemplate.show()
-      const $content = $('#content')
-      $content.show();
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////// QUOTATIONS /////////////////////////////////////
+
+
+createQuotation: async () => {
+    App.setLoading(true)
+    const airplane = $('#airPlaneInput').val()
+    const item = $('#repairInput').val()
+    const obs = $('#obs').val()
+	var tasks = []
+	const completed = false
+    const contentJSON = JSON.stringify({ airplane, item, obs, tasks, completed})
+	await App.quotationContract.createQuotation(contentJSON)
+	console.log('quotation *****', contentJSON)
+    window.location.reload()
+},
+
+
+
+
+renderQuotations: async () => {
+     // Load the total task count from the blockchain
+     const quotationCount = await App.quotationContract.quotationCount()
+     const $quotationTemplate = $('.quotationTemplate')
+ 
+     // Render out each task with a new task template
+     for (var i = 1; i <= quotationCount; i++) {
+       // Fetch the task data from the blockchain
+       const quotation = await App.quotationContract.quotations(i)
+       console.log('quotation***', quotation)
+       const quotationId = quotation[0].toNumber()
+       const content = JSON.parse(quotation[1])
+       console.log('quotation JSON***', content)
+       // Create the html for the task
+       //TO DO
+       const $newQuotationTemplate = $quotationTemplate.clone()
+       $newQuotationTemplate.find('.content').html(content._airplane)
+       $newQuotationTemplate.find('input')
+                       .prop('name', quotationId)
+                       .prop('checked', true)
+                       .on('click', App.toggleCompleted)
+ 
+      
+       if (false) {
+         $('#completedTaskList').append($newTaskTemplate)
+       } else {
+         $('#taskList').append($newQuotationTemplate)
+       }
     }
   },
 
-  createQuotation: async () => {
-    App.setLoading(true)
-    const airplane = $('#airPlaneInput').val();
-    const item = $('#repairInput').val();
-    const obs = $('#obs').val();
-    const content = JSON.stringify({ airplane, item, obs })
-    await App.quotationContract.createQuotation(content)
-    window.location.reload()
-  },
+///////////////////////////////////// END QUOTATIONS /////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////// TASKS /////////////////////////////////////
+
+createTask: async (taskCount) => {
+	const desc = $('#taskDescription').val()
+	const its_priceable = $('#priceable').val()
+	const price = 0;
+	if(priceable) {
+		price = $('#price').val()
+	} else {
+		price = -1
+	}
+
+	var task = {
+		id: taskCount, 
+		description: desc,
+		priceable: its_priceable,
+		priceUSD: price
+	}
+
+	return task;
+},
+
+
+
+
+///////////////////////////////////// END TASKS /////////////////////////////////////
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   toggleCompleted: async (e) => {
     App.setLoading(true)

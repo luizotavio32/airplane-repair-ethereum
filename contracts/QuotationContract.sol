@@ -11,14 +11,13 @@ contract QuotationContract {
     }
     struct Quotation {
         uint id;
-        uint numTasks;
         string jsonContent;
     }
 
     mapping(uint => Quotation) public quotations; //id da quotation
     mapping(uint => Task) public tasks; //id da task
 
-    event QuotationCreated(uint id, uint tasks, string jsonContent);
+    event QuotationCreated(uint id, string jsonContent);
     event TaskCreated(uint id, uint quoteId, string jsonContent);
 
     
@@ -31,12 +30,12 @@ contract QuotationContract {
 
     function createQuotation(string memory jsonContent) public {
         quotationCount++;
-        quotations[quotationCount] = Quotation(quotationCount, 1, jsonContent);
-        emit QuotationCreated(quotationCount, 1, jsonContent);
+        quotations[quotationCount] = Quotation(quotationCount, jsonContent);
+        emit QuotationCreated(quotationCount, jsonContent);
     }
     
-    function getQuotation(uint _id) public view returns(uint, string memory) {
-        return(quotations[_id].numTasks, quotations[_id].jsonContent);
+    function getQuotation(uint _id) public view returns(string memory) {
+        return(quotations[_id].jsonContent);
     }
     
     
