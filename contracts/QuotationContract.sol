@@ -6,7 +6,6 @@ contract QuotationContract {
     uint public taskCount = 0; //estado do contato
     struct Task {
         uint id;
-        uint quoteId;
         string jsonContent;
     }
     struct Quotation {
@@ -18,13 +17,13 @@ contract QuotationContract {
     mapping(uint => Task) public tasks; //id da task
 
     event QuotationCreated(uint id, string jsonContent);
-    event TaskCreated(uint id, uint quoteId, string jsonContent);
+    event TaskCreated(uint id, string jsonContent);
 
     
-    function createTask(uint _id, uint _qId, string memory jsonContent) public {
+    function createTask(string memory jsonContent) public {
         taskCount++;
-        tasks[_id] = Task(_id, _qId, jsonContent);
-        emit TaskCreated(_id, _qId, jsonContent);
+        tasks[taskCount] = Task(taskCount, jsonContent);
+        emit TaskCreated(taskCount, jsonContent);
         
     }
 
@@ -40,7 +39,7 @@ contract QuotationContract {
     
     
     function getTask(uint _id) public view returns(uint, string memory) {
-        return(tasks[_id].quoteId, tasks[_id].jsonContent);
+        return(tasks[_id].id, tasks[_id].jsonContent);
     }
     
 }

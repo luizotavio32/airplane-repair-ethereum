@@ -98,19 +98,24 @@ App = {
 
 
 createQuotation: async () => {
-    App.setLoading(true)
-    const airplane = $('#airPlaneInput').val()
-    const item = $('#repairInput').val()
-    const obs = $('#obs').val()
+  App.setLoading(true)
+  const airplane = $('#airPlaneInput').val()
+  const item = $('#repairInput').val()
+  const obs = $('#obs').val()
 	var tasks = []
 	const completed = false
-    const contentJSON = JSON.stringify({ airplane, item, obs, tasks, completed})
+  const contentJSON = JSON.stringify({ airplane, item, obs, tasks, completed})
 	await App.quotationContract.createQuotation(contentJSON)
-	console.log('quotation *****', contentJSON)
     window.location.reload()
 },
 
-
+checkPriceable: () => {
+  let priceable = $('#repairInput').val();
+  console.log(priceable);
+  let value = $('#valueToFix');
+  if(priceable === 'SIM') value.show();
+  else value.hide();
+},
 
 
 renderQuotations: async () => {
@@ -131,11 +136,10 @@ renderQuotations: async () => {
        const $newQuotationTemplate = $quotationTemplate.clone()
        $newQuotationTemplate.find('.content').html(content._airplane)
        $newQuotationTemplate.find('input')
-                       .prop('name', quotationId)
-                       .prop('checked', true)
-                       .on('click', App.toggleCompleted)
- 
-      
+        .prop('name', quotationId)
+        .prop('checked', true)
+        .on('click', App.toggleCompleted)
+
        if (false) {
          $('#completedTaskList').append($newTaskTemplate)
        } else {
@@ -165,13 +169,14 @@ renderQuotations: async () => {
 ///////////////////////////////////// TASKS /////////////////////////////////////
 
 createTask: async (taskCount) => {
-	const desc = $('#taskDescription').val()
-	const its_priceable = $('#priceable').val()
+  App.setLoading(true)
+	const desc = $('#taskDescription').val();
+	const its_priceable = $('#priceable').val();
 	const price = 0;
 	if(priceable) {
-		price = $('#price').val()
+		price = $('#price').val();
 	} else {
-		price = -1
+		price = -1;
 	}
 
 	var task = {
@@ -179,9 +184,11 @@ createTask: async (taskCount) => {
 		description: desc,
 		priceable: its_priceable,
 		priceUSD: price
-	}
+	};
 
-	return task;
+	const contentJSON = JSON.stringify(task);
+	await App.quotationContract.createTask(contentJSON);
+  window.location.reload();
 },
 
 

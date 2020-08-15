@@ -27,7 +27,7 @@
       }
 
       form {
-        width: 350px;
+        width: 800px;
         margin-bottom: 10px;
       }
 
@@ -91,11 +91,29 @@
     float: none;
   }
 }
+
+
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
     </style>
   </head>
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://ethereum.org/developers/" target="_blank">Lista de Compras | Ethereum</a>
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://ethereum.org/developers/" target="_blank">Projeto de Sistemas Distribuídos | Blockchain Ethereum</a>
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap d-none d-sm-none d-sm-block">
           <small><a class="nav-link" href="#"><span id="account"></span></a></small>
@@ -133,12 +151,48 @@
               </div>
               </div>
               <input type="submit" value="OK">
-            </form>
+			</form>
+			<label id="idQuotation"></label>
+
+			<div>
+				<table>
+					<tr>
+					  <th>Task ID</th>
+					  <th>Description</th>
+					  <th>Price</th>
+					  <th>Completed</th>
+					</tr>
+					
+				  </table>
+				  
+				  <form onSubmit="; return false;" style="margin-top:10px">
+					
+					<h2>É Precificável</h2>
+					<select id="repairInput" class="form-control" placeholder="Precificável" onChange="App.checkPriceable();" >
+					  <option value="" >Sim</option>
+					  <option value="">Não</option>
+					<input id="#valueToFix" type="number" placeholder="Valor" style="display: none;" > 
+					  
+					</select>
+					<div class="row">
+					  <div class="col-md-12 col-xs-12">
+					  <label>Descrição</label>
+					  <textarea id="obs" class="form-control" rows="3"></textarea>
+					</div>
+					</div>
+					<input type="submit" value="OK">
+				  </form>
+			</div>
              
            
 
 
 
+
+
+
+
+            
 
 
             
@@ -155,7 +209,12 @@
           </div>
         </main>
       </div>
-    </div>
+	</div>
+	
+	
+		
+
+	
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
