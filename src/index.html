@@ -4,81 +4,61 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Lista de Compras</title>
+    <title>Blockchain Ethereum</title>
     <link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-      main {
-        margin-top: 60px;
-      }
+	<style>
 
-      #content {
-        display: none;
-      }
-
-      form {
-        width: 800px;
-        margin-bottom: 10px;
-      }
-
-      ul {
-        margin-bottom: 0px;
-      }
-
-      #completedTaskList .content {
-        color: grey;
-        text-decoration: line-through;
-      }
-      .header {
-  overflow: hidden;
-  background-color: #413e3e;
-  padding: 20px 10px;
+body {
+	background-color: #f2f2f2;
 }
 
-/* Style the header links */
-.header a {
-  float: left;
-  color: rgb(218, 214, 214);
-  text-align: center;
-  padding: 12px;
-  text-decoration: none;
-  font-size: 18px;
-  line-height: 25px;
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+
+  border: 1px solid #ccc;
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
-/* Style the logo link (notice that we set the same value of line-height and font-size to prevent the header to increase when the font gets bigger */
-.header a.logo {
-  font-size: 25px;
-  font-weight: bold;
+input[type=number]{
+  width: 10%;
+  padding: 12px 20px;
+  margin: 8px 0;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-/* Change the background color on mouse-over */
-.header a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-/* Style the active/current link*/
-.header a.active {
-  background-color: dodgerblue;
+input[type=submit] {
+  width: 100%;
+  background-color: rgb(76, 163, 175);
   color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-/* Float the link section to the right */
-.header-right {
-  float: right;
+
+
+input[type=submit]:hover {
+  background-color: #abb0ca;
 }
 
-/* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
-@media screen and (max-width: 500px) {
-  .header a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-  .header-right {
-    float: none;
-  }
+textarea {
+  width: 100%;
+  height: 150px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  resize: none;
 }
 
 table {
@@ -96,9 +76,43 @@ td, th {
 tr:nth-child(even) {
   background-color: #dddddd;
 }
-    </style>
+
+.input-quotation-container {
+  border-radius: 5px;
+  padding: 20px;
+  width: 100%;
+  
+}
+
+.show-quotation-container{
+  border-radius: 5px;
+  padding: 20px;
+  width: 100%;
+}
+
+div {
+  border-radius: 5px;
+  padding: 20px;
+  width: 100%;
+}
+
+button {
+  width: 50px; 
+  height: 20px; 
+  background-color:#abb0ca;
+
+}
+
+th , ti {
+  text-align: center;
+}
+
+
+
+  	</style>
   </head>
   <body>
+  <div>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="https://ethereum.org/developers/" target="_blank">Projeto de Sistemas Distribuídos | Blockchain Ethereum</a>
       <ul class="navbar-nav px-3">
@@ -107,68 +121,89 @@ tr:nth-child(even) {
         </li>
       </ul>
     </nav>
-    <div class="container-fluid">
-      <div class="row">
-        <main role="main" class="col-lg-12 d-flex justify-content-center">
-          <div id="loader" class="text-center">
-            <p class="text-center">Loading...</p>
-          </div>
-          <div id="content">
-            <form onSubmit="App.createQuotation(); return false;">
-              <input type="text" id="airPlaneInput" placeholder="Aeronave">
-              <select id="repairInput" class="form-control" >
-                <option value="Trem de Pouso">Trem de Pouso</option>
-                <option value="Turbina">Turbina</option>
-                <option value="Fuselagem">Fuselagem</option>
-              </select>
-              <div class="row">
-                <div class="col-md-12 col-xs-12">
-                <label>Observações</label>
-                <textarea id="obs" class="form-control" rows="3"></textarea>
-              </div>
-              </div>
-              <input type="submit" value="OK">
-			</form>
-			<label id="idQuotation"></label>
-			<div>
-				<table>
-					<tr>
-					  <th>Task ID</th>
-					  <th>Description</th>
-					  <th>Price</th>
-					  <th>Completed</th>
-					</tr>
-				</table>
-				  <form onSubmit="; return false;" style="margin-top:10px">
-					<h2>É Precificável</h2>
-					<select id="repairInput" class="form-control" placeholder="Precificável" onChange="App.checkPriceable();" >
-					  <option value="" >Sim</option>
-					  <option value="">Não</option>
-					<input id="#valueToFix" type="number" placeholder="Valor" style="display: none;" > 
-					</select>
-					<div class="row">
-					  <div class="col-md-12 col-xs-12">
-					  <label>Descrição</label>
-					  <textarea id="obs" class="form-control" rows="3"></textarea>
-					</div>
-					</div>
-					<input type="submit" value="OK">
-				  </form>
-			</div>
-            <ul id="taskList" class="list-unstyled">
-              <div class="quotationTemplate" class="checkbox" style="display: none">
-                <label>
-                  <input type="checkbox" />
-                  <span class="content">Produto</span>
-                </label>
-              </div>
-            </ul>
-            <ul id="completedTaskList" class="list-unstyled">
-            </ul>
-          </div>
-        </main>
-      </div>
+  </div>
+    
+	<div class="content">
+	<div class="input-quotation-container">
+		<form onSubmit="App.createQuotation(); return false;">	
+      <h2>Criando nova cotação</h2>
+			<label for="repair">Selecione o Item de Reparo</label>
+			<select id="repairInput" name="repair">
+			  <option value="trem-de-pouso">Trem de Pouso</option>
+			  <option value="Fuselagem">Fuselagem</option>
+			  <option value="turbina">Turbina</option>
+			</select>
+			<input type="text" id="airPlaneInput" name="airplane" placeholder="Digite o modelo da aeronave ...">		
+			
+			<textarea  id = "obs" placeholder="Observações" ></textarea>
+			<input type="submit" value="Submit">
+		  </form>
 	</div>
+
+	<div class="show-quotation-container">
+      <h2>Cotações</h2>
+
+      <table id="quotation-table">
+        <tr>
+          <th style="width: 2%">ID</th>
+          <th style="width: 10%">Aeronave</th>
+          <th style="width: 10%">Item para Reparo</th>
+          <th>Observações</th>
+          <th style="width: 5%;">Tasks</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>EMBRAER E2 190</td>
+          <td>Trem de Pouso</td>
+          <td>Necessário reparo até dia 20/09</td>
+          <td><button style="font-size: 10px;">Tasks</button></td>
+        </tr>
+      </table>
+
+		
+  </div>
+  
+  <div class="input-task-container">
+    <form onSubmit="App.createTask(); return false;">	
+  
+      <h2>Adicionando Nova Task</h2>
+		
+      <input type="text" id="taskDescription" placeholder="Descreva a task brevemente (EX: Material encomendado)">
+      <label for="price">Digite o valor (em dólar) das transações envolvidas na task: </label>
+      
+      <input type="number" id="price" min="0">
+      <p>Tasks não precificáveis tem valor 0</p>
+			<input type="submit" value="Submit">
+		  </form>
+
+  </div>
+
+  <div class="show-task-container">
+
+    <h2>Tasks - Cotação X</h2>
+
+      <table id="task-table">
+        <tr>
+          <th style="width:2%">ID</th>
+          <th>Descrição</th>
+          <th style="width:10%">Preço</th>
+          <th style="width:10%">Task completa?</th>
+          
+        </tr>
+        <tr onclick="">
+          <th>1</th>
+          <td>Material Encomendado</td>
+          <td>450</td>
+          <td><input type="radio" id="completed"></td>
+          
+          
+        </tr>
+      </table>
+
+  </div>
+
+</div>
+   
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
