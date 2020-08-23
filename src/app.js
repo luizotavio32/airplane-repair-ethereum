@@ -102,7 +102,8 @@ createQuotation: async () => {
 	const airplane = $('#airPlaneInput').val()
 	const item = $('#repairInput').val()
 	const obs = $('#obs').val()
-	const id = await App.quotationContract.quotationCount() 
+	var id = await App.quotationContract.quotationCount()
+	id = Number(id) + 1
 	var tasks = []
   	const contentJSON = JSON.stringify({id, airplane, item, obs, tasks})
 	await App.quotationContract.createQuotation(contentJSON)
@@ -116,15 +117,29 @@ renderQuotations: async () => {
 	// Load the total task count from the blockchain
 	const quotationCount = await App.quotationContract.quotationCount()
 	
-	
+	var table = document.getElementById("quotation-table")
  
      // Render out each task with a new task template
      for (var i = 1; i <= quotationCount; i++) {
 		// Fetch the task data from the blockchain
 		const quotation = await App.quotationContract.quotations(i)
-		const quotationId = quotation[0]
+		var row = table.insertRow(i)
+		var id = row.insertCell(0);
+		var airplane = row.insertCell(1);
+		var item = row.insertCell(2);
+		var obs = row.insertCell(3);
+		var button = row.insertCell(4);
+		
+		
+		
 		const content = JSON.parse(quotation[1])
-		console.log('quotation JSON***', content)
+
+		id.innerHTML = `<a id="quoteID"> ${content.id}</a>`
+		airplane.innerHTML = content.airplane
+		item.innerHTML = content.item
+		obs.innerHTML = content.obs
+		button.innerHTML = '<button onclick=App.renderTasks() style="font-size: 10px;">Tasks</button>';
+		
 			
        
        
@@ -151,26 +166,29 @@ renderQuotations: async () => {
 
 ///////////////////////////////////// TASKS /////////////////////////////////////
 
-createTask: async (taskCount) => {
+
+
+createTask: async (taskCount, QuotationId) => {
   App.setLoading(true)
-	const desc = $('#taskDescription').val();
-	const its_priceable = $('#priceable').val();
-	const price = 0;
-	if(priceable) {
-		price = $('#price').val();
-	} else {
-		price = -1;
-	}
+  const desc = $('#taskDescription').val();
+  const its_priceable = $('#priceable').val();
+  const price = 0;
+  if(priceable) {
+    price = $('#price').val();
+  } else {
+    price = -1;
+  }
 
-	var task = {
-		id: taskCount, 
-		description: desc,
-		priceable: its_priceable,
-		priceUSD: price
-	};
+  var task = {
+    id: taskCount, 
+    description: desc,
+    priceable: its_priceable,
+    priceUSD: price,
+    QuotationId,
+  };
 
-	const contentJSON = JSON.stringify(task);
-	await App.quotationContract.createTask(contentJSON);
+  const contentJSON = JSON.stringify(task);
+  await App.quotationContract.createTask(contentJSON);
   window.location.reload();
 },
 
