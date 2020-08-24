@@ -1,7 +1,6 @@
 App = {
   loading: false,
   contracts: {},
-
   ///////////////////////////////// METAMASK INTEGRATION /////////////////////////////////
   load: async () => {
     await App.loadWeb3()
@@ -9,7 +8,6 @@ App = {
     await App.loadContract()
     await App.render()
   },
-
   // https://medium.com/metamask/https-medium-com-metamask-breaking-change-injecting-web3-7722797916a8
   loadWeb3: async () => {
     if (typeof web3 !== 'undefined') {
@@ -54,7 +52,6 @@ App = {
     const quotationContract = await $.getJSON('QuotationContract.json')
     App.contracts.QuotationContract = TruffleContract(quotationContract)
     App.contracts.QuotationContract.setProvider(App.web3Provider)
-
     // Hydrate the smart contract with values from the blockchain
     App.quotationContract = await App.contracts.QuotationContract.deployed()
   },
@@ -78,25 +75,6 @@ App = {
     App.setLoading(false)
   },
 
-///////////////////////////////// END METAMASK INTEGRATION /////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////// QUOTATIONS /////////////////////////////////////
-
-
 createQuotation: async () => {
 	App.setLoading(true)
 	const airplane = $('#airPlaneInput').val()
@@ -110,15 +88,10 @@ createQuotation: async () => {
 	window.location.reload()
 },
 
-
-
-
 renderQuotations: async () => {
 	// Load the total task count from the blockchain
 	const quotationCount = await App.quotationContract.quotationCount()
-	
 	var table = document.getElementById("quotation-table")
- 
      // Render out each task with a new task template
      for (var i = 1; i <= quotationCount; i++) {
 		// Fetch the task data from the blockchain
@@ -129,9 +102,6 @@ renderQuotations: async () => {
 		var item = row.insertCell(2);
 		var obs = row.insertCell(3);
 		var button = row.insertCell(4);
-		
-		
-		
 		const content = JSON.parse(quotation[1])
 
 		id.innerHTML = `<a id="quoteID"> ${content.id}</a>`
@@ -139,37 +109,13 @@ renderQuotations: async () => {
 		item.innerHTML = content.item
 		obs.innerHTML = content.obs
 		button.innerHTML = '<button onclick=App.renderTasks() style="font-size: 10px;">Tasks</button>';
-		
-			
-       
-       
     }
   },
 
-///////////////////////////////////// END QUOTATIONS /////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-///////////////////////////////////// TASKS /////////////////////////////////////
-
-
-
 createTask: async (taskCount, QuotationId) => {
   App.setLoading(true)
+  const taskCount = await App.quotationContract.taskCount() + 1;
+  const QuotationId = $('#quoteID').val();
   const desc = $('#taskDescription').val();
   const its_priceable = $('#priceable').val();
   const price = 0;
@@ -192,26 +138,7 @@ createTask: async (taskCount, QuotationId) => {
   window.location.reload();
 },
 
-
-
-
 ///////////////////////////////////// END TASKS /////////////////////////////////////
-
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   toggleCompleted: async (e) => {
     App.setLoading(true)
