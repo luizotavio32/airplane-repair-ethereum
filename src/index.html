@@ -50,6 +50,22 @@ input[type=submit]:hover {
   background-color: #abb0ca;
 }
 
+.return-button {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(76, 163, 175);
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.return-button:hover {
+  background-color: #abb0ca;
+}
+
 textarea {
   width: 100%;
   height: 150px;
@@ -124,7 +140,7 @@ th , ti {
   </div>
     
 	<div class="content">
-	<div class="input-quotation-container">
+	<div id = "inputQ" class="input-quotation-container">
 		<form onSubmit="App.createQuotation(); return false;">	
       <h2>Criando nova cotação</h2>
 			<label for="repair">Selecione o Item para Reparo</label>
@@ -140,7 +156,7 @@ th , ti {
 		  </form>
 	</div>
 
-	<div class="show-quotation-container">
+	<div id="showQ" class="show-quotation-container">
       <h2>Cotações</h2>
 
       <table id="quotation-table">
@@ -158,8 +174,31 @@ th , ti {
 
 		
   </div>
+
+  <div id="showT" class="show-task-container">
+
+    <h2>Tasks - Cotação X</h2>
+
+      <table id="task-table">
+        <tr>
+          <th style="width:2%">ID</th>
+          <th>Descrição</th>
+          <th style="width:3%">Preço</th>
+          <th style="width:10%">Task completa?</th>
+          <th style="width:20%">Usuário</th>
+          <th style="width:20%">Data</th>
+        </tr>
+       
+          
+          
+          
+       
+      </table>
+
+  </div>
+
   
-  <div class="input-task-container">
+  <div id="inputT" class="input-task-container">
     <form onSubmit="App.createTask(); return false;">	
   
       <h2>Adicionando Nova Task</h2>
@@ -170,34 +209,12 @@ th , ti {
       <input type="number" id="price" min="0">
       <p>Tasks não precificáveis tem valor 0</p>
 			<input type="submit" value="Submit">
-		  </form>
+      </form>
+      <button class="return-button" onclick="App.returnToQuotation(); return false;">Voltar para Cotaçṍes</button>
 
   </div>
 
-  <div class="show-task-container">
-
-    <h2>Tasks - Cotação X</h2>
-
-      <table id="task-table">
-        <tr>
-          <th style="width:2%">ID</th>
-          <th>Descrição</th>
-          <th style="width:10%">Preço</th>
-          <th style="width:10%">Task completa?</th>
-          
-        </tr>
-        <tr onclick="">
-          <th>1</th>
-          <td>Material Encomendado</td>
-          <td>450</td>
-          <td><input type="radio" id="completed"></td>
-          
-          
-        </tr>
-      </table>
-
-  </div>
-
+ 
 </div>
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
