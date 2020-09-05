@@ -73,9 +73,10 @@ App = {
     $('#account').html(App.account)
 
     await App.renderQuotations()
+    await App.renderTasks()
     
     
-    const showTasks = await App.quotationContract.showtasks()
+    const showTasks = await App.quotationContract.taskCount()
 
     const inputTask = $('#inputT')
     const showTask = $('#showT')
@@ -131,11 +132,13 @@ createQuotation: async () => {
 	App.setLoading(true)
 	const airplane = $('#airPlaneInput').val()
 	const item = $('#repairInput').val()
-	const obs = $('#obs').val()
+  const obs = $('#obs').val()
+  const userID = web3.eth.accounts[0];
+  const date = new Date()
 	var id = await App.quotationContract.quotationCount()
 	id = Number(id) + 1
 	var tasks = []
-  const contentJSON = JSON.stringify({id, airplane, item, obs, tasks})
+  const contentJSON = JSON.stringify({id, airplane, item, obs, userID, date, tasks})
 	await App.quotationContract.createQuotation(contentJSON)
 	window.location.reload()
 },
@@ -158,7 +161,9 @@ renderQuotations: async () => {
       var airplane = row.insertCell(1);
       var item = row.insertCell(2);
       var obs = row.insertCell(3);
-      var button = row.insertCell(4);
+      var user = row.insertCell(4);
+      var data = row.insertCell(5);
+      var button = row.insertCell(6);
       
       
       
@@ -169,6 +174,8 @@ renderQuotations: async () => {
       airplane.innerHTML = content.airplane
       item.innerHTML = content.item
       obs.innerHTML = content.obs
+      user.innerHTML = content.userID
+      data.innerHTML = content.date
       button.innerHTML = `<button onclick=App.showTasks(${content.id}) style="font-size: 10px;">Tasks</button>`;
       
         
@@ -242,6 +249,7 @@ createTask: async (QuotationId) => {
     userID: web3.eth.accounts[0],
     dateModified: date,
     QId,
+    completed: 0
   };
 
   const contentJSON = JSON.stringify(task);
@@ -254,33 +262,85 @@ createTask: async (QuotationId) => {
 
 renderTasks: async () => {
   const taskCount = await App.quotationContract.taskCount()
+  const completedTaskCount = await App.quotationContract.completedTaskCount()
 	
 	var table = document.getElementById("task-table")
  
      // Render out each task with a new task template
-     for (var i = 1; i <= taskCount; i++) {
-		// Fetch the task data from the blockchain
-    const task = await App.quotationContract.tasks(i)
-    
+    for (let i = 1; i <= taskCount; i++) {
+			// Fetch the task data from the blockchain
+		const task = await App.quotationContract.tasks(i)
+		
 		var row = table.insertRow(i)
 		var id = row.insertCell(0);
 		var desc = row.insertCell(1);
 		var price = row.insertCell(2);
-    var button = row.insertCell(3);
-    var account = row.insertCell(4);
-    var data = row.insertCell(5);
+		var account = row.insertCell(3);
+		var account2 = row.insertCell(4)
+		var data = row.insertCell(5);
+		var data2 = row.insertCell(6)
+		var button = row.insertCell(7);
+		
+		
 		
 		
 		
 		const content = JSON.parse(task[1])
-		id.innerHTML = `<a id="taskID"> ${content.id}</a>`
+		
+		row.id = `taskRow${content.id}`
+		id.innerHTML = `<a id="taskID">${content.id}</a>`
 		desc.innerHTML = content.description
 		price.innerHTML = content.priceUSD
-    button.innerHTML = '<input type="radio" id="completed">'
-    account.innerHTML = content.userID
-    data.innerHTML = content.dateModified
-    }
+		account.innerHTML = content.userID
+		data.innerHTML = content.dateModified
+		button.innerHTML = `<button class = "task-button" onclick= "App.completeTasks('taskRow${content.id}', ${content.id})" style="font-size: 10px;"></button>`;
+		document.getElementById(row.id).style.backgroundColor = '#e679';
+
+
+
+		if(completedTaskCount > 0) {
+			for (let j = 1; j <= completedTaskCount; j++) {
+				const ctask = await App.quotationContract.completedTasks(j)
+				console.log(ctask)
+				const contentT = JSON.parse(ctask)
+				if(content.id == contentT.id) {
+					console.log(contentT)
+					data2.innerHTML = contentT.date
+					account2.innerHTML = contentT.userID
+					document.getElementById(contentT.hid).style.backgroundColor = '#8ad897'
+					break;
+					
+				}
+			}
+		}
+      
     
+  }
+
+  
+
+
+
+    
+
+},
+
+completeTasks: async(hid, taskID) => {
+
+	const date = new Date()
+	var completed = {
+		id: taskID,
+		hid: hid,
+		userID: web3.eth.accounts[0],
+		date: date,
+	}
+
+	console.log(completed)
+
+	const contentJSON = JSON.stringify(completed);
+	await App.quotationContract.createCompleteTask(contentJSON);
+	showtasks = 1
+	window.location.reload()
 
 },
 
