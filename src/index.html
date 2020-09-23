@@ -173,23 +173,26 @@ th , ti {
           <th>Observações</th>
           <th style="width: 10%">Usuário</th>
           <th style="width: 17%">Data </th>
-          <th style="width: 5%;">Tasks</th>
+          <!-- <th style="width: 5%;">Tasks</th> -->
         </tr>
         <tr>
           
         </tr>
       </table>
 
+      <button class="return-button" onclick="App.showTasks(); return false;">Mostrar Tasks</button>
+
 		
   </div>
 
-  <div id="showT" class="show-task-container">
 
-    <h2>Tasks - Cotação X</h2>
+  <div id="showT" class="show-task-container">
+  
+    <h2>Tasks</h2>
 
       <table id="task-table">
         <tr>
-          <th >ID</th>
+          <th >QID</th>
           <th >Descrição</th>
           <th >Preço</th>
           <th >User created</th>
@@ -219,6 +222,9 @@ th , ti {
       
       <input type="number" id="price" min="0">
       <p>Tasks não precificáveis tem valor 0</p>
+      <p>Cotação:</p> 
+      <input type="number" id="quoteID" min="1">
+      
 			<input type="submit" value="Submit">
       </form>
       <button class="return-button" onclick="App.returnToQuotation(); return false;">Voltar para Cotaçṍes</button>

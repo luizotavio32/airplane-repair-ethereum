@@ -2,6 +2,8 @@
 App = {
   loading: false,
   contracts: {},
+  showt: 0,
+  
 
   ///////////////////////////////// METAMASK INTEGRATION //////////////////////////////////
   load: async () => {
@@ -163,7 +165,7 @@ renderQuotations: async () => {
       var obs = row.insertCell(3);
       var user = row.insertCell(4);
       var data = row.insertCell(5);
-      var button = row.insertCell(6);
+      //var button = row.insertCell(6);
       
       
       
@@ -176,7 +178,8 @@ renderQuotations: async () => {
       obs.innerHTML = content.obs
       user.innerHTML = content.userID
       data.innerHTML = content.date
-      button.innerHTML = `<button onclick=App.showTasks(${content.id}) style="font-size: 10px;">Tasks</button>`;
+      //button.innerHTML = `<button onclick=App.showTasks(${content.id}) style="font-size: 10px;">Tasks</button>`;
+      
       
         
        
@@ -195,6 +198,7 @@ renderQuotations: async () => {
     showQuoation.show()
     inputTask.hide()
     showTask.hide()
+    showt = 1
   },
 
 ///////////////////////////////////// END QUOTATIONS /////////////////////////////////////
@@ -222,18 +226,17 @@ showTasks: async (id) => {
 
   App.renderTasks(id);
   console.log(id);
-  const inputTask = $('#inputT')
-  const showTask = $('#showT')
-  inputTask.show()
-  showTask.show()
-
-  const inputQuotation = $('#inputQ')
-  const showQuoation = $('#showQ')
+  $('#inputT').show()
+  $('#showT').show()
+  
+  
+  $('#inputQ').hide()
+  $('#showQ').hide()
   inputQuotation.hide()
   showQuoation.hide()
 },
 
-createTask: async (QuotationId) => {
+createTask: async () => {
   App.setLoading(true)
   var count = await App.quotationContract.taskCount();
   count = Number(count) + 1
@@ -254,67 +257,69 @@ createTask: async (QuotationId) => {
 
   const contentJSON = JSON.stringify(task);
   await App.quotationContract.createTask(contentJSON);
-  showtasks = 1
+  currentQuotation = QId
+  showT = 1
   window.location.reload()
   
   
 },
 
-renderTasks: async () => {
+renderTasks: async (quoteID) => {
   const taskCount = await App.quotationContract.taskCount()
   const completedTaskCount = await App.quotationContract.completedTaskCount()
 	
 	var table = document.getElementById("task-table")
  
-     // Render out each task with a new task template
+     
     for (let i = 1; i <= taskCount; i++) {
-			// Fetch the task data from the blockchain
+			
 		const task = await App.quotationContract.tasks(i)
-		
-		var row = table.insertRow(i)
-		var id = row.insertCell(0);
-		var desc = row.insertCell(1);
-		var price = row.insertCell(2);
-		var account = row.insertCell(3);
-		var account2 = row.insertCell(4)
-		var data = row.insertCell(5);
-		var data2 = row.insertCell(6)
-		var button = row.insertCell(7);
-		
-		
-		
-		
-		
 		const content = JSON.parse(task[1])
+		// if(quoteID == content.id) {
 		
-		row.id = `taskRow${content.id}`
-		id.innerHTML = `<a id="taskID">${content.id}</a>`
-		desc.innerHTML = content.description
-		price.innerHTML = content.priceUSD
-		account.innerHTML = content.userID
-		data.innerHTML = content.dateModified
-		button.innerHTML = `<button class = "task-button" onclick= "App.completeTasks('taskRow${content.id}', ${content.id})" style="font-size: 10px;"></button>`;
-		document.getElementById(row.id).style.backgroundColor = '#e679';
+			var row = table.insertRow(i)
+			var id = row.insertCell(0);
+			var desc = row.insertCell(1);
+			var price = row.insertCell(2);
+			var account = row.insertCell(3);
+			var account2 = row.insertCell(4)
+			var data = row.insertCell(5);
+			var data2 = row.insertCell(6)
+			var button = row.insertCell(7);
+			
+			
+			
+			
+			
+			
+			
+			row.id = `taskRow${content.id}`
+			id.innerHTML = `<a id="taskID">${content.QId}</a>`
+			desc.innerHTML = content.description
+			price.innerHTML = content.priceUSD
+			account.innerHTML = content.userID
+			data.innerHTML = content.dateModified
+			button.innerHTML = `<button class = "task-button" onclick= "App.completeTasks('taskRow${content.id}', ${content.id})" style="font-size: 10px;"></button>`;
+			document.getElementById(row.id).style.backgroundColor = '#e679';
 
 
 
-		if(completedTaskCount > 0) {
-			for (let j = 1; j <= completedTaskCount; j++) {
-				const ctask = await App.quotationContract.completedTasks(j)
-				console.log(ctask)
-				const contentT = JSON.parse(ctask)
-				if(content.id == contentT.id) {
-					console.log(contentT)
-					data2.innerHTML = contentT.date
-					account2.innerHTML = contentT.userID
-					document.getElementById(contentT.hid).style.backgroundColor = '#8ad897'
-					break;
-					
+			if(completedTaskCount > 0) {
+				for (let j = 1; j <= completedTaskCount; j++) {
+					const ctask = await App.quotationContract.completedTasks(j)
+					console.log(ctask)
+					const contentT = JSON.parse(ctask)
+					if(content.id == contentT.id) {
+						console.log(contentT)
+						data2.innerHTML = contentT.date
+						account2.innerHTML = contentT.userID
+						document.getElementById(contentT.hid).style.backgroundColor = '#8ad897'
+						break;
+						
+					}
 				}
 			}
-		}
-      
-    
+		//} 
   }
 
   
@@ -364,12 +369,7 @@ completeTasks: async(hid, taskID) => {
 
 
 
-  toggleCompleted: async (e) => {
-    App.setLoading(true)
-    const taskId = e.target.name
-    await App.quotationContract.toggleCompleted(taskId)
-    window.location.reload()
-  },
+  
 
   setLoading: (boolean) => {
     App.loading = boolean
