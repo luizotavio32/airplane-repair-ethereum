@@ -7,3 +7,9 @@ Developed during my computer science masters at Universidade Federal de São Pau
 
 
 Pre-requisites: node.js, npm, truffle, ganache, metamask.
+
+Terminal commands to reproduce:
+1. sudo truffle migrate --reset
+2. npm run dev
+
+
